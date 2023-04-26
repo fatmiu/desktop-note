@@ -3,6 +3,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
+    id("app.cash.sqldelight") version "2.0.0-alpha05"
 }
 
 group = "com.miumiu"
@@ -14,6 +15,14 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
 
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("com.miumiu")
+        }
+    }
+}
+
 kotlin {
     jvm {
         jvmToolchain(11)
@@ -23,6 +32,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
+                implementation("app.cash.sqldelight:sqlite-driver:2.0.0-alpha05")
             }
         }
         val jvmTest by getting
