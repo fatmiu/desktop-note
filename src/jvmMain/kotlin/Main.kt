@@ -1,42 +1,92 @@
-import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import com.miumiu.Database
-import commiumiusqldelighthockeydata.HockeyPlayer
-import commiumiusqldelighthockeydata.PlayerQueries
+import ui.MainScreen
+import ui.note.NoteMainScreen
+import ui.photo.PhotoMainScreen
+import ui.setting.SettingMainScreen
+import util.NavController
+import util.NavigationHost
+import util.composable
+import util.rememberNavController
+
+
+fun main() = application {
+    Window(onCloseRequest = ::exitApplication) {
+        mainScreen()
+    }
+}
 
 @Composable
-@Preview
-fun App() {
-    var text by remember { mutableStateOf("Hello, World!") }
+fun mainScreen() {
+    val screens = MainScreen.values().toList()
+    val navController by rememberNavController(MainScreen.NoteMainScreen.name)
+    val currentScreen by remember {
+        navController.currentScreen
+    }
 
     MaterialTheme {
-        Button(onClick = {
-            text = "Hello, Desktop!"
-        }) {
-            Text(text)
+        Surface(
+            modifier = Modifier.background(color = MaterialTheme.colors.background)
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                // I have used navigation rail to show how it works
+                // You can use your own navbar
+                NavigationRail(
+                    modifier = Modifier.align(Alignment.CenterStart).fillMaxHeight()
+                ) {
+                    screens.forEach {
+                        NavigationRailItem(
+                            selected = currentScreen == it.name,
+                            icon = {
+                                Icon(
+                                    imageVector = it.icon,
+                                    contentDescription = it.label
+                                )
+                            },
+                            label = {
+                                Text(it.label)
+                            },
+                            alwaysShowLabel = false,
+                            onClick = {
+                                navController.navigate(it.name)
+                            }
+                        )
+                    }
+                }
+
+                Box(
+                    modifier = Modifier.fillMaxHeight()
+                ) {
+                    MainNavigationHost(navController = navController)
+                }
+            }
         }
     }
 }
 
-fun main() = application {
-    val database = Database(DriverFactory().createDriver())
-
-    val playerQueries: PlayerQueries = database.playerQueries
-
-    println(playerQueries.selectAll().executeAsList())
-
-    playerQueries.insert(player_number = 10, full_name = "Corey Perry")
-    println(playerQueries.selectAll().executeAsList())
-
-    val player = HockeyPlayer(10, "Ronald McDonald")
-    playerQueries.insertFullPlayerObject(player)
-
-    Window(onCloseRequest = ::exitApplication) {
-        App()
-    }
+@Composable
+fun MainNavigationHost(
+    navController: NavController
+) {
+    NavigationHost(navController) {
+        composable(MainScreen.NoteMainScreen.name) {
+            NoteMainScreen()
+        }
+        composable(MainScreen.PhotoMainScreen.name) {
+            PhotoMainScreen()
+        }
+        composable(MainScreen.SettingsMainScreen.name) {
+            SettingMainScreen()
+        }
+    }.build()
 }

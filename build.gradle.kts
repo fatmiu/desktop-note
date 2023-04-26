@@ -30,9 +30,11 @@ kotlin {
     }
     sourceSets {
         val jvmMain by getting {
+            val material3Version: String by project
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation("app.cash.sqldelight:sqlite-driver:2.0.0-alpha05")
+                implementation ("androidx.compose.material3:material3:$material3Version")
             }
         }
         val jvmTest by getting
