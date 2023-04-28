@@ -14,26 +14,30 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun NoteScreen(
-    onEdit: () -> Unit
+    state: NoteState,
+    onEvent: (NoteEvent) -> Unit,
 ) {
+    println(state.note)
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
         Text(
-            text = "2023/04/29"
+            text = state.note?.date ?: "date"
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             modifier = Modifier.weight(1f),
-            text = "sample text"
+            text = state.note?.note ?: "note"
         )
         Spacer(modifier = Modifier.height(16.dp))
         FloatingActionButton(
             modifier = Modifier.align(alignment = Alignment.End),
             shape = RoundedCornerShape(16.dp),
-            onClick = { onEdit() },
+            onClick = {
+                onEvent(NoteEvent.onEdit)
+            },
         ) {
             Icon(Icons.Filled.Edit, "edit")
         }

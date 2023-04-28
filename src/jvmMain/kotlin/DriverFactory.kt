@@ -5,7 +5,7 @@ import java.io.File
 
 actual class DriverFactory {
     actual fun createDriver(): SqlDriver {
-        val dbPath = "./database/hockey.db"
+        val dbPath = "./database/note.db"
         val jdbcUrl = "jdbc:sqlite:$dbPath"
         val db = File(dbPath)
         val driver: SqlDriver = JdbcSqliteDriver(jdbcUrl)

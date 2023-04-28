@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import di.AppModule.noteViewModel
 import util.*
 
 @Composable
@@ -24,9 +25,16 @@ fun NoteNavigationHost(
 ) {
     NavigationHost(navController) {
         composable(Routes.NOTE) {
-            NoteScreen() {
-                navController.navigate(Routes.NOTE_EDIT)
-            }
+            val viewModel = noteViewModel
+            viewModel.refresh("2023-04-29")
+            NoteScreen(
+                state = viewModel.state,
+                onEvent = { event ->
+                    when (event) {
+                        NoteEvent.onEdit -> navController.navigate(Routes.NOTE_EDIT)
+                    }
+                }
+            )
         }
         composable(Routes.NOTE_EDIT) {
             NoteEditScreen() {

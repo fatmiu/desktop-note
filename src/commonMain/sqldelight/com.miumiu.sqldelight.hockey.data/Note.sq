@@ -1,0 +1,17 @@
+CREATE TABLE note (
+  date TEXT NOT NULL,
+  note TEXT NOT NULL
+);
+
+CREATE INDEX note_timestamp ON note(date);
+
+INSERT INTO note (date, note)
+VALUES ('2023-04-29', 'This is a test note, I did it!!!');
+
+selectByDate:
+SELECT *
+FROM note WHERE date = ?;
+
+insert:
+INSERT INTO note(date, note)
+VALUES ?;
