@@ -9,14 +9,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import repository.NoteRepository
+import java.time.LocalDateTime
 
 data class NoteState(
-    val note: Note? = null
+    val note: Note? = null,
+    val selectedDate: String? = null
 )
 
 sealed class NoteEvent {
     object OnEdit : NoteEvent()
-    data class OnDateSelect(val date: String): NoteEvent()
+    object OnDiscard : NoteEvent()
+    data class OnDateSelect(val date: String) : NoteEvent()
+    data class OnSave(val note: Note) : NoteEvent()
 }
 
 class NoteViewModel(private val repository: NoteRepository) {
@@ -24,20 +28,27 @@ class NoteViewModel(private val repository: NoteRepository) {
     var state by mutableStateOf(NoteState())
         private set
 
-    fun onEvent(event: NoteEvent) {
-        when (event) {
-            is NoteEvent.OnDateSelect -> {
-                println(event.date)
-                refresh(date = event.date)
-            }
-            else -> Unit
-        }
+    init {
+        refresh(state.selectedDate ?: LocalDateTime.now().toLocalDate().toString())
     }
 
     fun refresh(date: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            delay(1000)
-            state = state.copy(note = repository.selectByDate(date))
+            // TODO: check db connection
+            try {
+                state = state.copy(note = repository.selectByDate(date), selectedDate = date)
+            } catch (e: Exception) {
+                delay(1000)
+                refresh(date)
+            }
+        }
+    }
+
+    fun insert(note: Note) {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.insert(note)
+            // TODO: correct this flow after implement coroutine sql delight ext
+            state = state.copy(note = note)
         }
     }
 }

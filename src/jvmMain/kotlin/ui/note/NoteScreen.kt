@@ -25,13 +25,12 @@ fun NoteScreen(
     state: NoteState,
     onEvent: (NoteEvent) -> Unit,
 ) {
-    println(state.note)
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        DateSelector(state.note) {
+        DateSelector(state.note, state.selectedDate) {
             onEvent(NoteEvent.OnDateSelect(it))
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -73,8 +72,20 @@ fun NoteScreen(
 }
 
 @Composable
-fun DateSelector(note: Note?, onSelect: (date: String) -> Unit) {
-    val dateSplit = note?.date?.split("-") ?: LocalDateTime.now().toLocalDate().toString().split("-")
+fun DateSelector(note: Note?, selectedDate: String?, onSelect: (date: String) -> Unit) {
+    val dateSplit = when {
+        note != null -> {
+            note.date.split("-")
+        }
+
+        selectedDate != null -> {
+            selectedDate.split("-")
+        }
+
+        else -> {
+            LocalDateTime.now().toLocalDate().toString().split("-")
+        }
+    }
 
     var yearText by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(dateSplit[0]))
