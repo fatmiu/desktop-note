@@ -2,15 +2,23 @@ package ui.note
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import commiumiusqldelighthockeydata.Note
+import util.parseDate
+import java.time.LocalDateTime
 
 @Composable
 fun NoteScreen(
@@ -23,23 +31,91 @@ fun NoteScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            text = state.note?.date ?: "date"
-        )
+        DateSelector(state.note) {
+            onEvent(NoteEvent.OnDateSelect(it))
+        }
         Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            modifier = Modifier.weight(1f),
-            text = state.note?.note ?: "note"
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        FloatingActionButton(
+        if (state.note == null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "note not found",
+                    fontSize = 16.sp,
+                )
+            }
+        } else {
+            Text(
+                modifier = Modifier.weight(1f),
+                text = state.note.note
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        Row(
             modifier = Modifier.align(alignment = Alignment.End),
-            shape = RoundedCornerShape(16.dp),
-            onClick = {
-                onEvent(NoteEvent.onEdit)
-            },
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(Icons.Filled.Edit, "edit")
+
+            Spacer(modifier = Modifier.width(16.dp))
+            FloatingActionButton(
+                shape = RoundedCornerShape(16.dp),
+                onClick = {
+                    onEvent(NoteEvent.OnEdit)
+                },
+            ) {
+                Icon(Icons.Filled.Edit, "edit")
+            }
+        }
+    }
+}
+
+@Composable
+fun DateSelector(note: Note?, onSelect: (date: String) -> Unit) {
+    val dateSplit = note?.date?.split("-") ?: LocalDateTime.now().toLocalDate().toString().split("-")
+
+    var yearText by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(TextFieldValue(dateSplit[0]))
+    }
+    var monthText by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(TextFieldValue(dateSplit[1]))
+    }
+    var dayText by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(TextFieldValue(dateSplit[2]))
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        OutlinedTextField(
+            modifier = Modifier.width(120.dp),
+            value = yearText,
+            onValueChange = { yearText = it },
+            label = { Text("Year") }
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        OutlinedTextField(
+            modifier = Modifier.width(120.dp),
+            value = monthText,
+            onValueChange = { monthText = it },
+            label = { Text("Month") }
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        OutlinedTextField(
+            modifier = Modifier.width(120.dp),
+            value = dayText,
+            onValueChange = { dayText = it },
+            label = { Text("Day") }
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        IconButton(
+            onClick = {
+                onSelect(parseDate(yearText.text, monthText.text, dayText.text))
+            }
+        ) {
+            Icon(Icons.Filled.Search, "search")
         }
     }
 }

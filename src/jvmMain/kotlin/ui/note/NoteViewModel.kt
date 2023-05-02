@@ -4,8 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import commiumiusqldelighthockeydata.Note
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import repository.NoteRepository
 
 data class NoteState(
@@ -13,7 +15,8 @@ data class NoteState(
 )
 
 sealed class NoteEvent {
-    object onEdit : NoteEvent()
+    object OnEdit : NoteEvent()
+    data class OnDateSelect(val date: String): NoteEvent()
 }
 
 class NoteViewModel(private val repository: NoteRepository) {
@@ -23,9 +26,11 @@ class NoteViewModel(private val repository: NoteRepository) {
 
     fun onEvent(event: NoteEvent) {
         when (event) {
-            NoteEvent.onEdit -> {
-                refresh("2023-04-29")
+            is NoteEvent.OnDateSelect -> {
+                println(event.date)
+                refresh(date = event.date)
             }
+            else -> Unit
         }
     }
 

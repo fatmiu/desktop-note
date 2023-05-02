@@ -9,7 +9,7 @@ class DefaultNoteRepository(private val database: NoteQueries): NoteRepository {
         database.insert(note)
     }
 
-    override fun selectByDate(date: String): Note {
-        return database.selectByDate(date).executeAsOne()
+    override fun selectByDate(date: String): Note? {
+        return database.selectByDate(date).executeAsOneOrNull()
     }
 }

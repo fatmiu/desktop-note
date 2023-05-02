@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import di.AppModule.noteViewModel
 import util.*
+import java.time.LocalDateTime
 
 @Composable
 fun NoteMainScreen() {
@@ -23,21 +24,25 @@ fun NoteMainScreen() {
 fun NoteNavigationHost(
     navController: NavController
 ) {
+    val viewModel = noteViewModel
+    viewModel.refresh(LocalDateTime.now().toLocalDate().toString())
+
     NavigationHost(navController) {
         composable(Routes.NOTE) {
-            val viewModel = noteViewModel
-            viewModel.refresh("2023-04-29")
             NoteScreen(
                 state = viewModel.state,
                 onEvent = { event ->
                     when (event) {
-                        NoteEvent.onEdit -> navController.navigate(Routes.NOTE_EDIT)
+                        NoteEvent.OnEdit -> navController.navigate(Routes.NOTE_EDIT)
+                        else -> {
+                            viewModel.onEvent(event)
+                        }
                     }
                 }
             )
         }
         composable(Routes.NOTE_EDIT) {
-            NoteEditScreen() {
+            NoteEditScreen {
                 navController.navigateBack()
             }
         }
