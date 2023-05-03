@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterialApi::class)
-
 package ui.note
 
 import androidx.compose.foundation.layout.Box
@@ -22,6 +20,7 @@ fun NoteMainScreen() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NoteNavigationHost(
     navController: NavController

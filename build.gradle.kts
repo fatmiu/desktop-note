@@ -2,7 +2,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.compose")
+    id("org.jetbrains.compose") version "1.4.0"
     id("app.cash.sqldelight") version "2.0.0-alpha05"
 }
 
