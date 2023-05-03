@@ -1,7 +1,10 @@
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package ui.note
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -27,13 +30,21 @@ fun NoteNavigationHost(
 
     NavigationHost(navController) {
         composable(Routes.NOTE) {
-            NoteScreen(
+            NoteGridScreen(
                 state = viewModel.state,
                 onEvent = { event ->
                     when (event) {
-                        NoteEvent.OnEdit -> navController.navigate(Routes.NOTE_EDIT)
                         is NoteEvent.OnDateSelect -> {
-                            viewModel.refresh(event.date)
+                            viewModel.setSelectedDate(event.date)
+                            navController.navigate(Routes.NOTE_EDIT)
+                        }
+
+                        NoteEvent.OnNextMonth -> {
+                            viewModel.nextMonth()
+                        }
+
+                        NoteEvent.OnPreviousMonth -> {
+                            viewModel.previousMonth()
                         }
 
                         else -> Unit

@@ -5,6 +5,10 @@ CREATE TABLE note (
 
 CREATE INDEX note_date ON note(date);
 
+selectAll:
+SELECT *
+FROM note;
+
 selectByDate:
 SELECT *
 FROM note WHERE date = ?;
