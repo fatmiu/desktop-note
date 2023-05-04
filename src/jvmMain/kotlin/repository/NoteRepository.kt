@@ -1,6 +1,6 @@
 package repository
 
-import commiumiusqldelighthockeydata.Note
+import com.miumiu.sqldelight.Note
 import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {

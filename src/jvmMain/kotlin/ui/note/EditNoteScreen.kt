@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import commiumiusqldelighthockeydata.Note
+import com.miumiu.sqldelight.Note
 
 
 @Composable

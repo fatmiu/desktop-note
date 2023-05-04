@@ -5,9 +5,10 @@ import java.io.File
 
 actual class DriverFactory {
     actual fun createDriver(): SqlDriver {
-        val dbPath = "./database/note.db"
-        val jdbcUrl = "jdbc:sqlite:$dbPath"
-        val db = File(dbPath)
+
+        val dbPath = File(System.getProperty("java.io.tmpdir"), "noteDb")
+        val jdbcUrl = "jdbc:sqlite:${dbPath.absolutePath}"
+        val db = File(dbPath.absolutePath)
         val driver: SqlDriver = JdbcSqliteDriver(jdbcUrl)
         if(!isFileExists(db)) {
             Database.Schema.create(driver)

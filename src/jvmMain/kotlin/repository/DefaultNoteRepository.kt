@@ -1,7 +1,7 @@
 package repository
 
-import commiumiusqldelighthockeydata.Note
-import commiumiusqldelighthockeydata.NoteQueries
+import com.miumiu.sqldelight.Note
+import com.miumiu.sqldelight.NoteQueries
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

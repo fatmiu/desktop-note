@@ -3,7 +3,7 @@ package ui.note
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import commiumiusqldelighthockeydata.Note
+import com.miumiu.sqldelight.Note
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
