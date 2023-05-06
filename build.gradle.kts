@@ -34,7 +34,13 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation("app.cash.sqldelight:sqlite-driver:2.0.0-alpha05")
-                implementation ("androidx.compose.material3:material3:$material3Version")
+                implementation("androidx.compose.material3:material3:$material3Version")
+                implementation("io.ktor:ktor-client-core:2.3.0")
+                implementation("io.ktor:ktor-client-jetty:2.3.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+                implementation("com.google.api-client:google-api-client:2.0.0")
+                implementation("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
+                implementation("com.google.apis:google-api-services-drive:v3-rev20220815-2.0.0")
             }
         }
         val jvmTest by getting

@@ -14,11 +14,15 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.res.loadImageBitmap
 import androidx.compose.ui.unit.dp
+import di.AppModule.photoViewModel
 import java.io.File
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PhotoMainScreen() {
+    val viewModel = photoViewModel
+    viewModel.greeting()
+
     var isDragging by remember { mutableStateOf(false) }
     var text by remember { mutableStateOf<String?>(null) }
     var path by remember { mutableStateOf<String?>(null) }
