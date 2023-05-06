@@ -37,8 +37,11 @@ kotlin {
                 implementation("androidx.compose.material3:material3:$material3Version")
                 implementation("io.ktor:ktor-client-core:2.3.0")
                 implementation("io.ktor:ktor-client-jetty:2.3.0")
+                implementation("io.ktor:ktor-client-content-negotiation:2.3.0")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
                 implementation("com.google.api-client:google-api-client:2.0.0")
+                implementation("com.google.auth:google-auth-library-oauth2-http:1.3.0")
                 implementation("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
                 implementation("com.google.apis:google-api-services-drive:v3-rev20220815-2.0.0")
             }

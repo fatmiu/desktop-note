@@ -68,6 +68,8 @@ fun PhotoMainScreen() {
                     painter = BitmapPainter(image = imageBitmap),
                     contentDescription = null
                 )
+
+                viewModel.upload(file)
             }
         }
     }
