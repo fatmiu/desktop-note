@@ -19,4 +19,10 @@ class PhotoViewModel(private val repository: GoogleDriveRepository) {
             println(repository.upload(file))
         }
     }
+
+    fun getPhotoList() {
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.getPhotoList()
+        }
+    }
 }

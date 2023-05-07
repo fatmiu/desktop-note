@@ -21,7 +21,8 @@ import java.io.File
 @Composable
 fun PhotoMainScreen() {
     val viewModel = photoViewModel
-    viewModel.greeting()
+//    viewModel.greeting()
+    viewModel.getPhotoList()
 
     var isDragging by remember { mutableStateOf(false) }
     var text by remember { mutableStateOf<String?>(null) }

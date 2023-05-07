@@ -2,11 +2,13 @@ package repository
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.client.http.FileContent
+import com.google.api.services.drive.model.File
+import di.AppModule.service
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import util.GoogleDriveUtil.getMetadata
-import util.GoogleDriveUtil.service
+import util.GoogleDriveUtil.getParent
 
 
 class DefaultGoogleDriveRepository(private val client: HttpClient) : GoogleDriveRepository {
@@ -27,6 +29,27 @@ class DefaultGoogleDriveRepository(private val client: HttpClient) : GoogleDrive
             System.err.println("Unable to upload file: " + e.details)
             throw e
         }
+    }
+
+    override suspend fun getPhotoList(): List<File> {
+        val files: MutableList<File> = ArrayList()
+
+        var pageToken: String? = null
+        do {
+            val result = service.files().list()
+                .setQ("'${getParent()}' in parents and mimeType='image/jpeg'")
+                .setSpaces("drive")
+                .setFields("nextPageToken, files(id, thumbnailLink)")
+                .setPageToken(pageToken)
+                .execute()
+            for (file in result.files) {
+                println("Found file: ${file.thumbnailLink} ${file.name} (${file.id})")
+            }
+            files.addAll(result.files)
+            pageToken = result.nextPageToken
+        } while (pageToken != null)
+
+        return files
     }
 
 }
