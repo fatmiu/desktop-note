@@ -39,11 +39,11 @@ class DefaultGoogleDriveRepository(private val client: HttpClient) : GoogleDrive
             val result = service.files().list()
                 .setQ("'${getParent()}' in parents and mimeType='image/jpeg'")
                 .setSpaces("drive")
-                .setFields("nextPageToken, files(id, thumbnailLink)")
+                .setFields("nextPageToken, files(id, name, thumbnailLink, webContentLink)")
                 .setPageToken(pageToken)
                 .execute()
             for (file in result.files) {
-                println("Found file: ${file.thumbnailLink} ${file.name} (${file.id})")
+                println("Found file: ${file.webContentLink.substringBefore("&")} ${file.name} (${file.id})")
             }
             files.addAll(result.files)
             pageToken = result.nextPageToken

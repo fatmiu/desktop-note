@@ -30,4 +30,8 @@ object GoogleDriveUtil {
         // TODO: set by user
         return "1totSLiwuza1V0bUlxYHFioZco1K419yT"
     }
+
+    fun parseContentLink(webContentLink: String): String {
+        return webContentLink.substringBefore("&")
+    }
 }
