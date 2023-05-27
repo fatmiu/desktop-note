@@ -23,7 +23,7 @@ class DefaultNoteRepository(private val database: NoteQueries) : NoteRepository 
                 emit(database.selectAll().executeAsList())
             } catch (e: Exception) {
                 delay(1000)
-                emit(database.selectAll().executeAsList())
+                selectAll()
             }
 
         }
