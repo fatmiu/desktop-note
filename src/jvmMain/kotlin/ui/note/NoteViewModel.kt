@@ -8,14 +8,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import repository.GoogleDriveRepository
 import repository.NoteRepository
+import java.io.File
 import java.time.LocalDateTime
 
 data class NoteState(
     val note: Note? = null,
     val notes: List<Note>? = null,
     val selectedDate: String? = null,
-    val monthOffset: Int = 0
+    val monthOffset: Int = 0,
+    val image: File? = null
 )
 
 sealed class NoteEvent {
@@ -23,11 +26,17 @@ sealed class NoteEvent {
     object OnDiscard : NoteEvent()
     object OnNextMonth : NoteEvent()
     object OnPreviousMonth : NoteEvent()
+    object OnClearImage : NoteEvent()
     data class OnDateSelect(val date: String) : NoteEvent()
-    data class OnSave(val note: Note) : NoteEvent()
+    data class OnSave(val note: String) : NoteEvent()
+    data class OnDragImage(val file: File) : NoteEvent()
+
 }
 
-class NoteViewModel(private val repository: NoteRepository) {
+class NoteViewModel(
+    private val repository: NoteRepository,
+    private val googleDriveRepository: GoogleDriveRepository
+) {
 
     var state by mutableStateOf(NoteState())
         private set
@@ -78,5 +87,25 @@ class NoteViewModel(private val repository: NoteRepository) {
     fun previousMonth() {
         val offset = state.monthOffset - 1
         state = state.copy(monthOffset = offset)
+    }
+
+    fun setTempImage(image: File) {
+        state = state.copy(image = image)
+    }
+
+    fun clearTempImage() {
+        state = state.copy(image = null)
+    }
+
+    fun save(text: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            if (state.image != null) {
+                googleDriveRepository.upload(state.image!!) { id ->
+                    insert(Note(state.selectedDate!!, text, "https://drive.google.com/uc?id=$id"))
+                }
+            } else {
+                insert(Note(state.selectedDate!!, text, null))
+            }
+        }
     }
 }

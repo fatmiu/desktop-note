@@ -78,7 +78,9 @@ fun NoteGridScreen(
         WeekDayGrid()
         Spacer(modifier = Modifier.height(16.dp))
         LazyVerticalGrid(
-            modifier = Modifier.onGloballyPositioned { coordinates ->
+            modifier = Modifier
+                .fillMaxSize()
+                .onGloballyPositioned { coordinates ->
                 calendarHeightDp = with(localDensity) { coordinates.size.height.toDp() }
             },
             columns = GridCells.Fixed(7)

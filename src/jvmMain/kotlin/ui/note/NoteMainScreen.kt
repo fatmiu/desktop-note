@@ -60,9 +60,17 @@ fun NoteNavigationHost(
                             navController.navigateBack()
                         }
 
+                        NoteEvent.OnClearImage -> {
+                            viewModel.clearTempImage()
+                        }
+
                         is NoteEvent.OnSave -> {
-                            viewModel.insert(event.note)
+                            viewModel.save(event.note)
                             navController.navigateBack()
+                        }
+
+                        is NoteEvent.OnDragImage -> {
+                            viewModel.setTempImage(image = event.file)
                         }
 
                         else -> Unit

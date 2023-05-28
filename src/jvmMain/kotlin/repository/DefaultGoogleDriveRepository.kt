@@ -17,13 +17,14 @@ class DefaultGoogleDriveRepository(private val client: HttpClient) : GoogleDrive
         return response.bodyAsText()
     }
 
-    override suspend fun upload(file: java.io.File): String {
+    override suspend fun upload(file: java.io.File, onSuccess: ((id: String) -> Unit)?): String? {
         return try {
             val uploadFile = service
                 .files()
                 .create(getMetadata(), FileContent("image/jpeg", file))
                 .setFields("id")
                 .execute()
+            onSuccess?.invoke(uploadFile.id)
             uploadFile.id
         } catch (e: GoogleJsonResponseException) {
             System.err.println("Unable to upload file: " + e.details)

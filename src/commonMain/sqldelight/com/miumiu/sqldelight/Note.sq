@@ -1,6 +1,7 @@
 CREATE TABLE note (
   date TEXT PRIMARY KEY,
-  note TEXT NOT NULL
+  note TEXT NOT NULL,
+  imageUrl TEXT
 );
 
 CREATE INDEX note_date ON note(date);
@@ -14,5 +15,5 @@ SELECT *
 FROM note WHERE date = ?;
 
 insert:
-INSERT OR REPLACE INTO note(date, note)
+INSERT OR REPLACE INTO note(date,note,imageUrl)
 VALUES ?;
